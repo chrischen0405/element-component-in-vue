@@ -57,5 +57,39 @@ export default {
 
 <style scoped lang="scss">
 .table-container {
+    /deep/ .el-table {
+        background-color: transparent;
+        &::before { // 表格底部边框
+            background: none;
+        }
+        tbody tr:hover > td { // 表格触碰样式
+            background-color: #F5F7FA;
+        }
+    }
+    /deep/ .el-table__header-wrapper {
+        .el-table__cell { // 表头样式
+            height: 44px;
+            padding: 0;
+            background: #FFFFFF;
+            border-bottom: #EBEEF5 solid 1px !important;
+            text-align: center;
+        }
+    }
+    /deep/ .el-table__body-wrapper {
+        &::-webkit-scrollbar { // 表格滚动条
+            width: 0 !important;
+        }
+        .el-table__row { // 表格行样式
+            background-color: #F5F7FA;
+            .el-table__cell {
+                padding: 0;
+                text-align: center;
+                border-bottom: #EBEEF5 solid 1px !important;
+            }
+        }
+        .light-line { // 高亮行颜色
+            background-color: #FFFFFF;
+        }
+    }
 }
 </style>
