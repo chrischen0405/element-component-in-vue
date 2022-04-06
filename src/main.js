@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css' // 样式文件需要单独引入
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
