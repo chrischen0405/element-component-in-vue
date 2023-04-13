@@ -2,7 +2,13 @@
   <div class="home">
     <chris-el-table
       :table-title="tableTitle"
-      :table-data="tableData">
+      :prop-data="tableData"
+      :is-show-pagination="true"
+      :total="tableData.length"
+      current-page-name="page"
+      page-size-name="rows"
+      @onPageChange="onPageChange"
+    >
       <el-table-column slot="handle" label="操作">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)">查看</el-button>
@@ -13,30 +19,17 @@
 </template>
 
 <script>
-import ChrisElTable from '../components/chris-el-table'
+import ChrisElTable from '../../components/ChrisElTable/index'
+import { tableTitle } from './table-config'
 
 export default {
   name: 'Home',
-  components: { ChrisElTable },
+  components: {
+    ChrisElTable
+  },
   data () {
     return {
-      tableTitle: [
-        {
-          label: '日期',
-          property: 'date'
-        },
-        {
-          label: '姓名',
-          property: 'name'
-        },
-        {
-          label: '地址',
-          property: 'address'
-        },
-        {
-          slot: 'handle'
-        }
-      ],
+      tableTitle,
       tableData: [
         {
           date: '2016-05-02',
@@ -64,6 +57,9 @@ export default {
   methods: {
     handleClick (item) {
       console.log(item)
+    },
+    onPageChange (ev) {
+      console.log(ev)
     }
   }
 }

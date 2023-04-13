@@ -1,7 +1,7 @@
 <template>
   <div class="table-container">
     <el-table
-      :data="tableData"
+      :data="propData ? propData : tableData"
       width="100%"
       :row-class-name="rowClassName"
       :height="height"
@@ -18,18 +18,30 @@
         </el-table-column>
       </template>
     </el-table>
+    <chris-el-pagination
+      v-if="isShowPagination"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total ? total : totalNum"
+      :current-page-name="currentPageName"
+      :page-size-name="pageSizeName"
+      @onChange="onPageChange"
+    ></chris-el-pagination>
   </div>
 </template>
 
 <script>
+import ChrisElPagination from '../ChrisElPagination/index'
+
 export default {
-  name: 'chris-el-table',
+  name: 'ChrisElTable',
+  components: {
+    ChrisElPagination
+  },
   props: {
-    tableData: { // 表格数据
+    propData: { // 表格数据
       type: Array,
-      default: () => {
-        return []
-      }
+      default: null
     },
     tableTitle: { // 表格头标题
       type: Array,
@@ -42,12 +54,39 @@ export default {
     rowHeight: { // 表格行高
       type: [Number, String],
       default: 44
+    },
+    isShowPagination: {
+      type: Boolean,
+      default: true
+    },
+    total: {
+      type: Number,
+      default: 0
+    },
+    currentPageName: {
+      type: String,
+      default: 'currentPage'
+    },
+    pageSizeName: {
+      type: String,
+      default: 'pageSize'
     }
   },
   data () {
-    return {}
+    return {
+      tableData: [],
+      currentPage: 1,
+      pageSize: 10,
+      totalNum: 0
+    }
   },
   methods: {
+    onPageChange (ev) {
+      console.log(ev)
+      this.currentPage = ev[this.currentPageName]
+      this.pageSize = ev[this.pageSizeName]
+      this.$emit('onPageChange', ev)
+    },
     rowClassName (e) {
       return e.rowIndex % 2 === 0 ? '' : 'light-line'
     }
