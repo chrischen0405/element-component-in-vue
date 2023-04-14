@@ -1,7 +1,12 @@
 <template>
   <div class="home">
+    <chris-form-item
+      :form-items="theadData"
+      :query="query"
+      @reload="reload"
+    ></chris-form-item>
     <chris-el-table
-      :table-title="tableTitle"
+      :table-title="theadData"
       :prop-data="tableData"
       :is-show-pagination="true"
       :total="tableData.length"
@@ -20,16 +25,18 @@
 
 <script>
 import ChrisElTable from '../../components/ChrisElTable/index'
-import { tableTitle } from './table-config'
+import { theadData } from './table-config'
+import ChrisFormItem from '../../components/ChrisFormItem/index'
 
 export default {
   name: 'Home',
   components: {
+    ChrisFormItem,
     ChrisElTable
   },
   data () {
     return {
-      tableTitle,
+      theadData,
       tableData: [
         {
           date: '2016-05-02',
@@ -51,15 +58,34 @@ export default {
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
         }
-      ]
+      ],
+      query: {}
     }
   },
+  created () {
+    this.setQuery()
+  },
   methods: {
+    setQuery (query = {}) {
+      this.theadData
+        .filter(e => e.search)
+        .forEach(opt => {
+          const { property } = opt
+          this.query[property] = query[property] || ''
+        })
+      this.query = { ...this.query }
+    },
     handleClick (item) {
       console.log(item)
     },
     onPageChange (ev) {
       console.log(ev)
+    },
+    reload (query, type) {
+      if (type === 'search') {
+        console.log(query)
+        this.setQuery(query)
+      }
     }
   }
 }

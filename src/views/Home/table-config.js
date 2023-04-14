@@ -1,15 +1,21 @@
-export const tableTitle = [
+export const theadData = [
   {
     label: '日期',
-    property: 'date'
+    property: 'date',
+    type: 'input',
+    search: true
   },
   {
     label: '姓名',
-    property: 'name'
+    property: 'name',
+    type: 'input',
+    search: true
   },
   {
     label: '地址',
-    property: 'address'
+    property: 'address',
+    type: 'input',
+    search: true
   },
   {
     slot: 'handle'
