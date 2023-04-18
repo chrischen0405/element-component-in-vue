@@ -21,3 +21,18 @@ export const theadData = [
     slot: 'handle'
   }
 ]
+
+export const controlList = [
+  {
+    title: '查看',
+    type: 'detail'
+  },
+  {
+    title: '编辑',
+    type: 'edit'
+  },
+  {
+    title: '删除',
+    type: 'delete'
+  }
+]

@@ -6,15 +6,17 @@
       @reload="reload"
     ></chris-form-item>
     <chris-el-table
-      :table-title="theadData"
+      :thead-data="theadData"
       :prop-data="tableData"
+      :control-list="controlList"
       :is-show-pagination="true"
       :total="tableData.length"
       current-page-name="page"
       page-size-name="rows"
       @onPageChange="onPageChange"
+      @handleDoAction="handleDoAction"
     >
-      <el-table-column slot="handle" label="操作">
+      <el-table-column slot="handle" label="查看">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)">查看</el-button>
         </template>
@@ -25,7 +27,10 @@
 
 <script>
 import ChrisElTable from '../../components/ChrisElTable/index'
-import { theadData } from './table-config'
+import {
+  controlList,
+  theadData
+} from './table-config'
 import ChrisFormItem from '../../components/ChrisFormItem/index'
 
 export default {
@@ -59,6 +64,7 @@ export default {
           address: '上海市普陀区金沙江路 1516 弄'
         }
       ],
+      controlList,
       query: {}
     }
   },
@@ -77,6 +83,9 @@ export default {
     },
     handleClick (item) {
       console.log(item)
+    },
+    handleDoAction (e) {
+      console.log(e)
     },
     onPageChange (ev) {
       console.log(ev)

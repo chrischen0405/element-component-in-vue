@@ -6,7 +6,7 @@
       :row-class-name="rowClassName"
       :height="height"
       :row-style="{height: `${rowHeight}px`}">
-      <template v-for="(item, index) in tableTitle">
+      <template v-for="(item, index) in theadData">
         <slot v-if="item.slot" :name="item.slot"></slot>
         <el-table-column
           v-else
@@ -17,6 +17,29 @@
           :width="item.width ? item.width : ''">
         </el-table-column>
       </template>
+      <el-table-column
+        v-if="isShowControl && controlList.length > 0"
+        :fixed="controlFixed"
+        :label="controlLabel"
+        align="center"
+      >
+        <template slot-scope="scope">
+          <template v-for="item in controlList">
+            <el-button
+              v-if="!item.slot"
+              :key="item.type"
+              :title="item.title"
+              :class="item.className ? item.className : ''"
+              @click="doAction(scope.row, item.type)"
+            >
+              {{ item.title }}
+            </el-button>
+            <template v-else slot-scope="scope">
+              <slot :name="item.type" :row="scope.row"></slot>
+            </template>
+          </template>
+        </template>
+      </el-table-column>
     </el-table>
     <chris-el-pagination
       v-if="isShowPagination"
@@ -41,33 +64,49 @@ export default {
   props: {
     propData: { // 表格数据
       type: Array,
-      default: null
+      default: () => []
     },
-    tableTitle: { // 表格头标题
+    theadData: { // 表格头标题
       type: Array,
-      require: true
+      default: () => []
     },
     height: { // 表格高度
       type: [Number, String],
-      default: '100%'
+      default: 'calc(100% - 100px)'
     },
     rowHeight: { // 表格行高
       type: [Number, String],
       default: 44
     },
-    isShowPagination: {
+    isShowControl: { // 是否展示操作列
       type: Boolean,
       default: true
     },
-    total: {
+    controlList: { // 操作栏操作按钮
+      type: Array,
+      default: () => []
+    },
+    controlFixed: { // 操作栏是否固定
+      type: [String, Boolean],
+      default: false
+    },
+    controlLabel: { // 操作栏列名
+      type: String,
+      default: '操作'
+    },
+    isShowPagination: { // 是否展示分页
+      type: Boolean,
+      default: true
+    },
+    total: { // 表格总数
       type: Number,
       default: 0
     },
-    currentPageName: {
+    currentPageName: { // 当前页码名称
       type: String,
       default: 'currentPage'
     },
-    pageSizeName: {
+    pageSizeName: { // 每页条数名称
       type: String,
       default: 'pageSize'
     }
@@ -81,6 +120,9 @@ export default {
     }
   },
   methods: {
+    doAction (row = {}, type = '') {
+      this.$emit('handleDoAction', { row, type })
+    },
     onPageChange (ev) {
       console.log(ev)
       this.currentPage = ev[this.currentPageName]
@@ -96,6 +138,8 @@ export default {
 
 <style scoped lang="scss">
 .table-container {
+  height: 100%;
+
   /deep/ .el-table {
     background-color: transparent;
 
@@ -106,35 +150,35 @@ export default {
     tbody tr:hover > td { // 表格触碰样式
       background-color: #F5F7FA;
     }
-  }
 
-  /deep/ .el-table__header-wrapper {
-    .el-table__cell { // 表头样式
-      height: 44px;
-      padding: 0;
-      background: #FFFFFF;
-      border-bottom: #EBEEF5 solid 1px !important;
-      text-align: center;
-    }
-  }
-
-  /deep/ .el-table__body-wrapper {
-    &::-webkit-scrollbar { // 表格滚动条
-      width: 0 !important;
-    }
-
-    .el-table__row { // 表格行样式
-      background-color: #F5F7FA;
-
-      .el-table__cell {
+    .el-table__header-wrapper, el-table__fixed-header-wrapper {
+      .el-table__cell { // 表头样式
+        height: 44px;
         padding: 0;
-        text-align: center;
+        background: #FFFFFF;
         border-bottom: #EBEEF5 solid 1px !important;
+        text-align: center;
       }
     }
 
-    .light-line { // 高亮行颜色
-      background-color: #FFFFFF;
+    .el-table__body-wrapper, .el-table__fixed-body-wrapper {
+      &::-webkit-scrollbar { // 表格滚动条
+        width: 0 !important;
+      }
+
+      .el-table__row { // 表格行样式
+        background-color: #F5F7FA;
+
+        .el-table__cell {
+          padding: 0;
+          text-align: center;
+          border-bottom: #EBEEF5 solid 1px !important;
+        }
+      }
+
+      .light-line { // 高亮行颜色
+        background-color: #FFFFFF;
+      }
     }
   }
 }
